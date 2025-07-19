@@ -1,5 +1,5 @@
 import { Error } from "mongoose";
-import { environment } from "../../confit";
+import { environment } from "../confit";
 import { NextFunction, Request, Response } from "express";
 
 const errorHandler = (

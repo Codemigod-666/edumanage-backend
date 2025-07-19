@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import { User } from "../database/models/User";
 import bcrypt from "bcryptjs";
 import { generateAccessToken, generateRefreshToken } from "../utils";
-import { environment } from "../../confit";
+import { environment } from "../confit";
 
 export const registerUser = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {

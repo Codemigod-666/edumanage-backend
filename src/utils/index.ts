@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { access_secret, refresh_secret } from "../../confit";
+import { access_secret, refresh_secret } from "../confit";
 import dotenv from "dotenv";
 
 dotenv.config();

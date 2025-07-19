@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { db } from "../../confit";
+import { db } from "../confit";
 
 const connectDb = async () => {
   try {

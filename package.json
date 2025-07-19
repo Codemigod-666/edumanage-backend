@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "postbuild": "node postbuild.js",
-    "start": "NODE_ENV=production  node dist/server.js",
+    "start": "cross-env NODE_ENV=production  node dist/server.js",
     "dev": "ts-node-dev --files src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

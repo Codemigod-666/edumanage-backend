@@ -1,20 +1,6 @@
 // import express, { Express } from "express"
 // import { json, urlencoded } from "body-parser"
 import routes from "./routes";
-// import { errorHandler } from "./middleware/errorHandler";
-
-// const app: Express = express()
-
-// app.use(json())
-// app.use(urlencoded({ extended: true }))
-
-// // Routes
-// app.use("/", routes)
-
-// // Error Handling Middleware
-// app.use(errorHandler)
-
-// export default app
 
 import express, { Request, Response } from "express";
 import cors from "cors";
@@ -28,7 +14,7 @@ import { errorHandler } from "./middleware/errorHandler";
 dotenv.config();
 
 export const app = express();
-const PORT = 1000;
+const PORT = process.env.PORT || 1000;
 
 connectDb();
 

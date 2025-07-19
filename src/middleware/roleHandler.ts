@@ -13,6 +13,8 @@ const roleHandler = (
     next();
   } else {
     res.sendStatus(401);
-    throw new Error("Role Access not Provided");
+    throw new Error("Role Access not Provided" + err);
   }
 };
+
+export default roleHandler;

@@ -4,6 +4,9 @@ import { Request, Response } from "express";
 
 export const getAllStudents = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
+    if (req) {
+      console.log("request");
+    }
     const students = await StudentModel.find();
     res.status(200).json({ data: students });
   }

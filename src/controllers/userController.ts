@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { User } from "../database/models/User";
 import bcrypt from "bcryptjs";
-import { generateAccessToken, generateRefreshToken } from "../utils";
+import { generateAccessToken, generateRefreshToken } from "../utils/index";
 import { environment } from "../confit";
 
 export const registerUser = expressAsyncHandler(
@@ -123,6 +123,10 @@ export const logout = expressAsyncHandler(
 
 export const getUsers = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
+    // check if the request is authorized
+    if (req) {
+      console.log("Request");
+    }
     const user = await User.find({});
     if (!user) {
       res.sendStatus(400);

@@ -16,10 +16,16 @@ connectDb();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://attend-pay.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://attend-pay.vercel.app",
+      process.env.CORS_URL || "",
+    ],
     credentials: true,
   })
 );
+
+console.log("url", process.env.CORS_URL);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false })); // (express middleware) parse the data from the "FORMS" to the req.body

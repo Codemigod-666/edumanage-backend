@@ -1,8 +1,10 @@
 import app from "./app";
 import { config } from "./config";
 
-app.listen(config.port, () => {
+const port = parseInt(config.port, 10);
+
+app.listen(port, () => {
   console.log(
-    `${config.nodeEnv} - Server is running on http://localhost:${config.port}`
+    `${config.nodeEnv} - Server is running on http://localhost:${port}`
   );
 });

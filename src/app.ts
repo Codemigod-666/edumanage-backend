@@ -14,8 +14,6 @@ import { errorHandler } from "./middleware/errorHandler";
 dotenv.config();
 
 export const app = express();
-const PORT = process.env.PORT || 1000;
-
 connectDb();
 
 app.use(
@@ -58,6 +56,6 @@ app.get("/api/hello", (req: Request, res: Response) => {
 });
 
 // listen to a port
-app.listen(PORT, () => console.log("Server is running on port", PORT));
+// app.listen(PORT, () => console.log("Server is running on port", PORT));
 
 export default app;

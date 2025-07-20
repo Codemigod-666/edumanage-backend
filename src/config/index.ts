@@ -12,7 +12,7 @@ export type Config = {
 // Export configurations
 export const config: Config = {
   nodeEnv: getEnvVar("NODE_ENV") as NodeEnvOptions,
-  port: getEnvVar("PORT"),
+  port: process.env.PORT || "3000",
   healthSecret: getEnvVar("HEALTH_SECRET"),
   logSecret: getEnvVar("LOGS_SECRET"),
 };

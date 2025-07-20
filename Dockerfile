@@ -19,4 +19,6 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
+EXPOSE ${PORT}
+
 CMD ["node", "dist/server.js"]

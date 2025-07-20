@@ -1,7 +1,7 @@
 import app from "./app";
 import { config } from "./config";
 
-const port = parseInt(config.port, 10);
+const port = parseInt(config.port, 10) || 3000;
 
 app.listen(port, () => {
   console.log(

@@ -40,13 +40,13 @@ export interface Student extends Document {
 //   paidAmount?: number;
 // }
 
-// export interface Batch {
-//   id: string;
-//   name: string;
-//   students: number;
-//   startTime: string;
-//   endTime: string;
-// }
+export interface Batch {
+  _id: string;
+  name: string;
+  students: number;
+  startTime: string;
+  endTime: string;
+}
 
 // export interface DashboardStats {
 //   totalStudents: number;

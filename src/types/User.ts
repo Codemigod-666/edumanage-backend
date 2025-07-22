@@ -42,5 +42,5 @@ export interface IUser extends Document {
   refreshTokens?: Token[];
   createdAt: Date;
   updatedAt: Date;
-  commparePassword(candadatePassword: string): Promise<boolean>;
+  comparePassword(candadatePassword: string): Promise<boolean>;
 }

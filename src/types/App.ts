@@ -3,6 +3,7 @@ import { Document } from "mongoose";
 // Student Interface
 export interface Student extends Document {
   _id: string;
+  tuition_id: string;
   first_name: string;
   last_name: string;
   gender: "male" | "female";

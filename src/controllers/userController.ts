@@ -7,99 +7,58 @@ import { environment } from "../confit";
 
 // export const registerUser = expressAsyncHandler(
 //   async (req: Request, res: Response): Promise<void> => {
-//     const { name, email, password } = req.body;
-//     // normalize the email
-//     const normalizedEmail = email.toLowerCase();
+//     const { name, email, password, role, tuition_id } = req.body;
+//     const normalizedemail = email.toLowerCase();
 
 //     if (!name || !email || !password) {
-//       res.status(400).json({ message: "Please fill all the required fields" });
+//       res.status(400);
 //       throw new Error("Please fill all the required fields");
 //     }
 
+//     // password validatoin:
+//     if (password.length < 5) {
+//       res.status(400);
+//       throw new Error("Password must be at least 8 characters long");
+//     }
+
 //     // if the user with that email already exists
-//     const userExists = await User.findOne({ email: normalizedEmail });
+//     const userExists = await User.findOne({ email: normalizedemail });
 //     if (userExists) {
-//       res.status(400).json({ message: "User Already Exists" });
+//       res.status(400);
 //       throw new Error("User Already Exists");
 //     }
 
 //     const user = await User.create({
-//       email: normalizedEmail,
 //       name,
-//       password, //hashed password
-//       role: "jobseeker",
+//       email: normalizedemail,
+//       password,
+//       role: role || "admin",
+//       tuition_id,
 //     });
 
-//     // access token and refresh token logic
 //     const accessToken = generateAccessToken(user._id, user.role);
 //     const refreshToken = generateRefreshToken(user._id, user.role);
 
 //     user.refreshTokens?.push({ token: refreshToken });
 //     await user.save();
 
+//     res.cookie("refreshToken", refreshToken, {
+//       httpOnly: true,
+//       secure: environment === "production",
+//       sameSite: "strict",
+//       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+//     });
+
 //     res.status(201).json({
+//       success: true,
 //       _id: user._id,
 //       name: user.name,
 //       email: user.email,
 //       accessToken,
-//       refreshToken,
+//       message: "User Registered Successfully",
 //     });
 //   }
 // );
-
-export const registerUser = expressAsyncHandler(
-  async (req: Request, res: Response): Promise<void> => {
-    const { name, email, password, role } = req.body;
-    const normalizedemail = email.toLowerCase();
-
-    if (!name || !email || !password) {
-      res.status(400);
-      throw new Error("Please fill all the required fields");
-    }
-
-    // password validatoin:
-    if (password.length < 5) {
-      res.status(400);
-      throw new Error("Password must be at least 8 characters long");
-    }
-
-    // if the user with that email already exists
-    const userExists = await User.findOne({ email: normalizedemail });
-    if (userExists) {
-      res.status(400);
-      throw new Error("User Already Exists");
-    }
-
-    const user = await User.create({
-      name,
-      email: normalizedemail,
-      password,
-      role: role || "admin",
-    });
-
-    const accessToken = generateAccessToken(user._id, user.role);
-    const refreshToken = generateRefreshToken(user._id, user.role);
-
-    user.refreshTokens?.push({ token: refreshToken });
-    await user.save();
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: environment === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    res.status(201).json({
-      success: true,
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      accessToken,
-      message: "User Registered Successfully",
-    });
-  }
-);
 
 // export const login = expressAsyncHandler(
 //   async (req: Request, res: Response): Promise<void> => {
@@ -144,6 +103,76 @@ export const registerUser = expressAsyncHandler(
 //   }
 // );
 
+export const registerUser = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const { name, email, password, role = "admin", tuition_id } = req.body;
+    const normalizedEmail = email?.toLowerCase();
+
+    // Validation
+    if (!name || !email || !password) {
+      res.status(400);
+      throw new Error("Please fill all the required fields");
+    }
+
+    if (password.length < 8) {
+      res.status(400);
+      throw new Error("Password must be at least 8 characters long");
+    }
+
+    const userExists = await User.findOne({ email: normalizedEmail });
+    if (userExists) {
+      res.status(400);
+      throw new Error("User already exists");
+    }
+
+    // Validate tuition_id rules based on role
+    if (role === "teacher" && !tuition_id) {
+      res.status(400);
+      throw new Error("Teacher must be assigned a tuition_id");
+    }
+
+    // Prevent tuition_id for super_admin
+    const finalTuitionId =
+      role === "super_admin"
+        ? undefined
+        : role === "teacher"
+        ? tuition_id
+        : undefined; // Admin will get tuition_id generated automatically
+
+    const user = await User.create({
+      name,
+      email: normalizedEmail,
+      password,
+      role,
+      tuition_id: finalTuitionId,
+    });
+
+    const accessToken = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user._id, user.role);
+
+    user.refreshTokens?.push({ token: refreshToken });
+    await user.save();
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: environment === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    res.status(201).json({
+      success: true,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      tuition_id: user.tuition_id,
+      accessToken,
+      message: "User registered successfully",
+    });
+  }
+);
+
 export const login = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
@@ -184,6 +213,8 @@ export const login = expressAsyncHandler(
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
+      tuition_id: user.tuition_id,
       accessToken,
     });
   }

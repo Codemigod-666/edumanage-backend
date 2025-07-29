@@ -1,13 +1,30 @@
 import expressAsyncHandler from "express-async-handler";
 import { StudentModel } from "../database/models/Student";
 import { Request, Response } from "express";
+import { User } from "../database/models/User";
+
+// export const getAllStudents = expressAsyncHandler(
+//   async (req: Request, res: Response): Promise<void> => {
+//     if (req) {
+//       console.log("request");
+//     }
+//     const students = await StudentModel.find();
+//     res.status(200).json({ data: students });
+//   }
+// );
 
 export const getAllStudents = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    if (req) {
-      console.log("request");
+    const { tuition_id } = req.query;
+
+    if (!tuition_id || typeof tuition_id !== "string") {
+      res
+        .status(400)
+        .json({ error: "tuidion_id is required as a query paramater" });
+      return;
     }
-    const students = await StudentModel.find();
+
+    const students = await StudentModel.find({ tuition_id });
     res.status(200).json({ data: students });
   }
 );
@@ -21,11 +38,31 @@ export const getStudentDetails = expressAsyncHandler(
   }
 );
 
+// export const addStudent = expressAsyncHandler(
+//   async (req: Request, res: Response): Promise<void> => {
+//     // check if the request is authorized
+//     const student = await StudentModel.create(req.body);
+//     await student.save();
+//     res.status(201).json({ data: student });
+//   }
+// );
+
 export const addStudent = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    // check if the request is authorized
+    const { tuition_id } = req.body;
+
+    // 1. Check if tuition_id exists in User collection
+    const tuitionOwner = await User.findOne({ tuition_id });
+    if (!tuitionOwner) {
+      res
+        .status(400)
+        .json({ error: "Invalid tuition_id. No such tuition owner exists." });
+      return;
+    }
+
+    // 2. Proceed to create the student
     const student = await StudentModel.create(req.body);
-    await student.save();
+
     res.status(201).json({ data: student });
   }
 );

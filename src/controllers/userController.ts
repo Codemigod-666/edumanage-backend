@@ -132,19 +132,19 @@ export const registerUser = expressAsyncHandler(
     }
 
     // Prevent tuition_id for super_admin
-    const finalTuitionId =
-      role === "super_admin"
-        ? undefined
-        : role === "teacher"
-        ? tuition_id
-        : undefined; // Admin will get tuition_id generated automatically
+    // const finalTuitionId =
+    //   role === "super_admin"
+    //     ? undefined
+    //     : role === "teacher"
+    //     ? tuition_id
+    //     : undefined; // Admin will get tuition_id generated automatically
 
     const user = await User.create({
       name,
       email: normalizedEmail,
       password,
       role,
-      tuition_id: finalTuitionId,
+      tuition_id: tuition_id,
     });
 
     const accessToken = generateAccessToken(user._id, user.role);
@@ -195,8 +195,13 @@ export const login = expressAsyncHandler(
     // generate the new access and refresh token
     const accessToken = generateAccessToken(user._id, user.role);
     const refreshToken = generateRefreshToken(user._id, user.role);
-    // send the response
 
+    // Trim to the last 4 tokens if already 5 or more
+    if (user.refreshTokens && user.refreshTokens.length >= 5) {
+      user.refreshTokens = user.refreshTokens.slice(-4); // keep last 4
+    }
+
+    // send the response
     user.refreshTokens?.push({ token: refreshToken });
     await user.save();
 

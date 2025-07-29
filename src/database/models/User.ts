@@ -222,7 +222,7 @@ schema.pre<IUser>("save", async function (next) {
     const timestamps = Date.now().toString(36).slice(-5);
     this.tuition_id = `TUI-${timestamps}-${ramdomStr}`;
   } else if (this.role === "super_admin") {
-    this.tuition_id = "";
+    this.tuition_id = "super_admin";
   }
 
   next();

@@ -6,6 +6,10 @@ export const COLLECTION_NAME = "students";
 
 export const schema = new Schema<Student>(
   {
+    tuition_id: {
+      type: String,
+      required: true,
+    },
     first_name: {
       type: String,
       trim: true,

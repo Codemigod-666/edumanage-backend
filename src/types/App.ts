@@ -3,6 +3,7 @@ import { Document } from "mongoose";
 // Student Interface
 export interface Student extends Document {
   _id: string;
+  tuition_id: string;
   first_name: string;
   last_name: string;
   gender: "male" | "female";
@@ -40,13 +41,13 @@ export interface Student extends Document {
 //   paidAmount?: number;
 // }
 
-// export interface Batch {
-//   id: string;
-//   name: string;
-//   students: number;
-//   startTime: string;
-//   endTime: string;
-// }
+export interface Batch {
+  _id: string;
+  name: string;
+  students: number;
+  startTime: string;
+  endTime: string;
+}
 
 // export interface DashboardStats {
 //   totalStudents: number;

@@ -7,6 +7,7 @@ import connectDb from "./database";
 import userRoutes from "./routes/userRoutes";
 import studentRoutes from "./routes/studentRoutes";
 import { errorHandler } from "./middleware/errorHandler";
+import batchRoutes from "./routes/batchRoutes";
 // import roleHandler from "./middleware/roleHandler";
 
 dotenv.config();
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: true })); // (express middleware) parse t
 app.use("/", routes);
 app.use("/api/auth", userRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api/batch", batchRoutes);
 
 //middlewares
 app.use(errorHandler);

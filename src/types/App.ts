@@ -20,6 +20,31 @@ export interface Student extends Document {
   emergency_contact: string;
 }
 
+export interface Batch extends Document {
+  _id: string;
+  tuition_id: string;
+  name: string;
+  subject: string;
+  instructor: string;
+  description: string;
+  max_students: number;
+  start_date: string;
+  end_date: string;
+  schedule: Weekday[];
+  start_time: string;
+  end_time: string;
+  status: string;
+}
+
+export type Weekday =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";
+
 // export interface AttendanceRecord {
 //   id: string;
 //   studentId: string;
